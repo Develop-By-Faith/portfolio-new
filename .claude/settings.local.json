@@ -12,7 +12,8 @@
       "Bash(curl -s http://localhost:5174)",
       "Bash(curl -s http://localhost:5175)",
       "Bash(curl -s http://localhost:5176)",
-      "Bash(curl -s http://localhost:5177)"
+      "Bash(curl -s http://localhost:5177)",
+      "Bash(npm --version)"
     ]
   }
 }
