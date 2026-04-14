@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(npx vite:*)",
+      "Bash(python3 -c ':*)",
+      "WebFetch(domain:www.growbibleapp.com)",
+      "WebFetch(domain:play.google.com)",
+      "WebFetch(domain:apps.apple.com)",
+      "Bash(npm run:*)",
+      "Bash(curl -s http://localhost:5173)",
+      "Bash(curl -s http://localhost:5174)",
+      "Bash(curl -s http://localhost:5175)",
+      "Bash(curl -s http://localhost:5176)",
+      "Bash(curl -s http://localhost:5177)"
+    ]
+  }
+}
