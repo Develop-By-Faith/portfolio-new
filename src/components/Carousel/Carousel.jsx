@@ -1,11 +1,14 @@
 import { useRef, useState, useEffect, useCallback, Children } from 'react'
-import { FiChevronLeft, FiChevronRight } from 'react-icons/fi'
+import { FiChevronLeft, FiChevronRight, FiX } from 'react-icons/fi'
 import './Carousel.css'
 
 function Carousel({ children }) {
   const trackRef = useRef(null)
   const rafRef = useRef(null)
   const [activeIndex, setActiveIndex] = useState(0)
+  const [modalSrc, setModalSrc] = useState(null)
+  const [modalAlt, setModalAlt] = useState('')
+  const [modalCaption, setModalCaption] = useState('')
   const itemCount = Children.count(children)
 
   const updateTransforms = useCallback(() => {
@@ -86,6 +89,34 @@ function Carousel({ children }) {
     items[index].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' })
   }
 
+  const openModal = (e) => {
+    const img = e.currentTarget.querySelector('img')
+    if (!img) return
+    const caption = e.currentTarget.querySelector('figcaption')
+    setModalSrc(img.src)
+    setModalAlt(img.alt || '')
+    setModalCaption(caption?.textContent || '')
+  }
+
+  const closeModal = () => {
+    setModalSrc(null)
+    setModalAlt('')
+    setModalCaption('')
+  }
+
+  useEffect(() => {
+    if (!modalSrc) return
+    const handleKey = (e) => {
+      if (e.key === 'Escape') closeModal()
+    }
+    document.body.style.overflow = 'hidden'
+    window.addEventListener('keydown', handleKey)
+    return () => {
+      document.body.style.overflow = ''
+      window.removeEventListener('keydown', handleKey)
+    }
+  }, [modalSrc])
+
   return (
     <div className="carousel">
       <button
@@ -97,7 +128,11 @@ function Carousel({ children }) {
         <FiChevronLeft size={20} />
       </button>
       <div className="carousel-track" ref={trackRef}>
-        {children}
+        {Children.map(children, (child) => (
+          <div className="carousel-item" onClick={openModal}>
+            {child}
+          </div>
+        ))}
       </div>
       <button
         className={`carousel-arrow carousel-arrow-right${activeIndex < itemCount - 1 ? ' visible' : ''}`}
@@ -117,6 +152,17 @@ function Carousel({ children }) {
               aria-label={`Go to slide ${i + 1}`}
             />
           ))}
+        </div>
+      )}
+      {modalSrc && (
+        <div className="carousel-modal-overlay" onClick={closeModal}>
+          <button className="carousel-modal-close" onClick={closeModal} aria-label="Close">
+            <FiX size={24} />
+          </button>
+          <div className="carousel-modal-content" onClick={(e) => e.stopPropagation()}>
+            <img src={modalSrc} alt={modalAlt} className="carousel-modal-image" />
+            {modalCaption && <p className="carousel-modal-caption">{modalCaption}</p>}
+          </div>
         </div>
       )}
     </div>
